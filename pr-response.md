@@ -54,11 +54,15 @@ This also matches `get_collection()`, which sorts collection entries by `date_ad
 Alphabetical order is predictable and can make a large watchlist easier to scan by title. However, it removes the context of when a film was added. I agreed that recency is more useful as the default because a watchlist changes over time. Alphabetical sorting could later be offered as an optional sorting choice.
 
 ## Comment 6 — Rebase
+
 **What conflicted:**
+The watchlist branch was created before the main branch migrated film IDs from integers to UUID strings. The watchlist model and documentation still referenced integer film IDs, which conflicted with the updated UUID-based models on main.
 
 **How I resolved it:**
+I preserved the watchlist feature while adopting the UUID definitions from the updated main branch. I made sure the watchlist entry's `film_id` foreign key used `String(36)` and updated the service and route documentation to describe film IDs as UUID strings. I also preserved the rename, deduplication logic, error handling, tests, and newest-first sorting from the feature branch.
 
 **How I verified no conflict remains:**
+I completed the rebase with `git rebase --continue`, searched the repository for unresolved conflict markers and outdated integer film ID references, and ran the full test suite with `pytest tests/ -v`. I also ran `git rev-list --merges` against the updated main branch and confirmed that no merge commits remained.
 
 ## PR Description
 <!-- Written at the end — feature overview, design decisions, manual testing steps -->

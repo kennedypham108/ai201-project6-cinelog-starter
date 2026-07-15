@@ -71,3 +71,22 @@ class CollectionEntry(db.Model):
             "date_added": self.date_added.isoformat(),
             "rating": self.rating,
         }
+
+class WatchlistEntry(db.Model):
+    id = db.Column(
+        db.String(36),
+        primary_key=True,
+        default=generate_uuid,
+    )
+
+    user_id = db.Column(
+        db.String(36),
+        db.ForeignKey("user.id"),
+        nullable=False,
+    )
+
+    film_id = db.Column(
+        db.String(36),
+        db.ForeignKey("film.id"),
+        nullable=False,
+    )
