@@ -1,7 +1,10 @@
 # PR Response Doc — CineLog Watchlist Feature
 
 ## AI Usage
-<!-- Fill in at the end — how you used AI tools during this project -->
+
+I used AI tools to help orient myself within the unfamiliar codebase by comparing the watchlist service with the existing collection service. In particular, I used AI to identify the project's naming, deduplication, testing, and error-handling patterns, then verified those observations directly against the source files.
+
+I also used AI to review my proposed conventional commit messages and to stress-test my reasoning for the visibility and sort-order decisions. I kept the final decisions grounded in CineLog's existing behavior and the maintainer's review comments rather than copying a generic recommendation.
 
 ## Comment 1 — Rename
 
@@ -64,5 +67,30 @@ I preserved the watchlist feature while adopting the UUID definitions from the u
 **How I verified no conflict remains:**
 I completed the rebase with `git rebase --continue`, searched the repository for unresolved conflict markers and outdated integer film ID references, and ran the full test suite with `pytest tests/ -v`. I also ran `git rev-list --merges` against the updated main branch and confirmed that no merge commits remained.
 
+## Final Commit History
+
+The following screenshot shows the cleaned commit history after the interactive rebase. Each commit represents one logical change, uses conventional commit format, and the branch contains no merge commits.
+
+![Final Git History](docs/git-history.png)
+
 ## PR Description
-<!-- Written at the end — feature overview, design decisions, manual testing steps -->
+
+### Overview
+
+This pull request completes the CineLog watchlist feature and addresses all six review comments. It renames the service function to match project conventions, prevents duplicate watchlist entries, adds missing test coverage, updates watchlist handling for UUID-based film IDs, and rebases the feature branch onto the latest main branch.
+
+### Design decisions
+
+- **Visibility default:** Watchlist entries remain public by default because CineLog is a social film-tracking platform and public watchlists support discovery and interaction. The privacy tradeoff is acknowledged, and a future account-level default could give users more control.
+- **Sort order:** Watchlist entries are sorted by date added, newest first. This makes recently added films easier to find and matches the ordering used by the collection feature.
+
+### Manual testing
+
+1. Create and activate the virtual environment.
+2. Install dependencies with `pip install -r requirements.txt`.
+3. Run the test suite with `pytest tests/ -v`.
+4. Start the application with `python app.py`.
+5. Retrieve a user's watchlist with:
+
+   ```bash
+   curl http://127.0.0.1:5000/watchlist/<user_id>
